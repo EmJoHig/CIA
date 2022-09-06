@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CIA App</title>
+    <!-- BOOTSTRAP - BOOTSWATCH THEME - COSMOS -->
+    {{!--
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/materia/bootstrap.min.css"> --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+    {{> navigation }}
+
+    <main class="p-5">
+        {{> messages }}
+        {{> errors }}
+        <section class="card">
+            <div class="card-body text-center">
+                <h4>ORDEN RECEPCION</h4>
+                {{!-- <div class="">
+                    <form>
+                        <div class="form-group">
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </form>
+                </div> --}}
+            </div>
+        </section>
+
+        {{!-- <section class="card mt-5">
+            <div class="card-body">
+                <h1>About</h1>
+                <p>
+                    Adipisicing lorem laudantium fuga excepturi iste earum? Architecto et sint exercitationem nihil
+                    voluptatum?
+                    Quae dolores sint fugiat inventore soluta ad Tenetur minima odit qui fugit eveniet minima? Repellat
+                    nobis
+                    harum quia placeat eveniet fugit voluptatem Pariatur maiores molestiae est quas.
+                </p>
+            </div>
+        </section> --}}
+
+        <div class="row pt-4">
+            <div class="col-md-4 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        Account Register
+                    </div>
+                    <div class="card-body">
+                        <form action="/vehiculo/new-orden-vehiculo" method="POST">
+                            <div class="form-group">
+                                <label class="" for="lblUser">Cliente</label>
+                                <select class="form-control" id="cliente" name="clienteSelect" onchange="cambiodecuerpo()">
+                                    <option value="">Seleccione un Cliente</option>
+                                    {{#each clientes}}
+                                        <option value="{{_id}}">{{ name }}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="" for="lblUser">Vehiculo</label>
+                                <select class="form-control" id="vehiculo" name="vehiculoSelect">
+                                    <option value="">Seleccione un Vehiculo</option>
+                                    {{!-- {{#each vehiculos}}
+                                        <option value="{{_id}}">{{ modelo }} {{ marca }} - {{ patente }}</option>
+                                    {{/each}} --}}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" name="personalReceptor" class="form-control" placeholder="Recibido por"/>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea name="tarea" class="form-control" placeholder="Tarea a Realizar"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea name="observacionRecepcion" class="form-control" placeholder="Observaciones"></textarea>
+                            </div>
+
+
+                            <button class="btn btn-primary btn-block">
+                                NUEVA ORDEN
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scritps -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+    {{!-- SELECT2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <script>
+        $("#cliente").select2();
+        $("#vehiculo").select2();
+
+        function cambiodecuerpo(){
+            var clienteee = document.getElementById('cliente');
+            
+            $.ajax({
+                url: "/datavehiculo-usuario",
+                type: 'GET',
+                dataType:'json',
+                data: clienteee.value,
+                success: function(res) {
+                    $("#vehiculo").empty();
+                    res.vehiculos.forEach(item => {
+                        $('#vehiculo').append(`<option value="${item._id}">${item.marca} ${item.modelo}</option>`);
+                    });
+                }
+            });   
+            
+        }
+    </script>
+
+</body>
+
+</html>

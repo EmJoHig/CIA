@@ -1,0 +1,13 @@
+<div class="row">
+    {{#each ordenes}}
+        <div class="col-lg-2 mt-3">
+            <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">{{ fechaIngreso }}</div>
+                <div class="card-body text-primary">
+                    <h5 class="card-title">{{ tarea }}</h5>
+                    <p class="card-text">{{ observacionRecepcion }}</p>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>
